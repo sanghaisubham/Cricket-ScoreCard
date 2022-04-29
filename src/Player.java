@@ -1,6 +1,5 @@
 public class Player {
-
-    private String playerName;
+    private final String playerName;
     private int runs;
     private int ballsFaced;
     private int fourCount;
@@ -20,50 +19,24 @@ public class Player {
         return (this.runs/this.ballsFaced)*100;
     }
 
-    public String getPlayer() {
-        return playerName;
-    }
-
-    public void score(int run){
+    public void scoreRun(int run){
         isBatting=true;
-        switch (run){
-            case 4:
-                fourCount++;
-                break;
-            case 6:
-                sixCount++;
-                break;
+        switch (run) {
+            case 4 -> fourCount++;
+            case 6 -> sixCount++;
         }
         ballsFaced+=1;
         runs+=run;
     }
 
-    public void out(){
+    public void getOut(){
         ballsFaced+=1;
         isBatting=false;
     }
 
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public int getRuns() {
-        return runs;
-    }
-
-    public int getBallsFaced() {
-        return ballsFaced;
-    }
-
-    public int getFourCount() {
-        return fourCount;
-    }
-
-    public int getSixCount() {
-        return sixCount;
-    }
-
-    public boolean isBatting() {
-        return isBatting;
+    public void displayPlayerDetails(){
+        String notOut= isBatting?"*":"";
+        System.out.println("\t"+playerName+notOut+"\t\t"+runs+"\t\t"+ballsFaced+"\t\t"+
+                fourCount +"\t\t"+sixCount);
     }
 }
