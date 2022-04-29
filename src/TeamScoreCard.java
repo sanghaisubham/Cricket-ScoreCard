@@ -18,18 +18,23 @@ public class TeamScoreCard {
     }
 
     void updateScore(String ballStatus) {
-        switch (ballStatus) {
+        String run=ballStatus;
+        int extras=0;
+        if(ballStatus.length()==3){
+            run = ballStatus.substring(0,1);
+            extras=1;
+        }
+        switch (run) {
             case "W" -> {
                 team.getPlayers().get(strikerIndex).getOut();
                 totalWickets++;
                 strikerIndex = max(strikerIndex, nonStrikerIndex) + 1;
             }
-            case "Wd" -> totalRuns++;
             default -> {
-                int run = Integer.parseInt(ballStatus);
-                totalRuns += run;
-                team.getPlayers().get(strikerIndex).scoreRun(run);
-                if (run % 2 != 0) {
+                int runInt = Integer.parseInt(run);
+                totalRuns += (runInt+extras);
+                team.getPlayers().get(strikerIndex).scoreRun(runInt);
+                if (runInt % 2 != 0) {
                     int temp = strikerIndex;
                     strikerIndex = nonStrikerIndex;
                     nonStrikerIndex = temp;
@@ -45,7 +50,7 @@ public class TeamScoreCard {
             player.displayPlayerDetails();
         }
         System.out.println("Total: "+totalRuns+"/"+totalWickets);
-        if(lastBallPlayed%6==0)
+        if(lastBallPlayed==6)
             System.out.println("Overs: "+overNumber);
         else
             System.out.println("Overs: "+(overNumber-1)+"."+lastBallPlayed);

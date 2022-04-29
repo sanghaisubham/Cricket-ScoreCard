@@ -3,7 +3,7 @@ public class Match {
     private  int totalOvers;
     private Innings firstInnings;
     private Innings secondInnings;
-    private int target;
+    private int target=-1;
 
     Match(int playerCount,int totalOvers,Team battingFirstTeam){
         this.playerCount = playerCount;
@@ -16,12 +16,12 @@ public class Match {
     }
 
     void playFirstInnings(){
-        firstInnings.playInnings(totalOvers,playerCount);
+        firstInnings.playInnings(totalOvers,playerCount,target);
         this.target= firstInnings.getScoreCard().getTotalRuns();
     }
 
     void playSecondInnings(){
-        secondInnings.playInnings(totalOvers,playerCount);
+        secondInnings.playInnings(totalOvers,playerCount,target);
     }
 
     void decideWinner(){
