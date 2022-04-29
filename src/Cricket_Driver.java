@@ -3,9 +3,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Cricket_Driver {
-    static int target=0;
     static int playerCount=0;
-
     public static void main(String[] args){
         System.out.println("Enter the number of player in each team");
        Scanner sc = new Scanner(System.in);
@@ -17,12 +15,14 @@ public class Cricket_Driver {
        int overCount = Integer.parseInt(overCountString);
 
 
-       List<Player> team1Players = teamDetails(playerCount,1);
+       System.out.println("Please enter the batting order of Team 1");
+       List<Player> team1Players = inputTeamDetails();
        TeamScoreCard team1TeamScoreCard = new TeamScoreCard(1,team1Players,0);
        playInnings(team1TeamScoreCard,overCount,playerCount);
         int team1Score = team1TeamScoreCard.getTotalRuns();
 
-        List<Player> team2Players =  teamDetails(playerCount,2);
+        System.out.println("Please enter the batting order of Team 2");
+        List<Player> team2Players =  inputTeamDetails();
         TeamScoreCard team2TeamScoreCard = new TeamScoreCard(2,team2Players,team1Score);
         playInnings(team2TeamScoreCard,overCount,playerCount);
         int team2Score = team2TeamScoreCard.getTotalRuns();
@@ -31,7 +31,8 @@ public class Cricket_Driver {
 
     }
 
-    public static void displayScore(TeamScoreCard teamScoreCard, int overNumber, int teamNumber){
+    public static void displayScore(TeamScoreCard teamScoreCard, int overNumber, int lastBallPlayed){
+        int teamNumber = teamScoreCard.getTeamNumber();
         System.out.println("Scorecard for Team "+teamNumber);
         System.out.println("PlayerName\tRuns\tBalls\tFours\tSixes");
 
@@ -41,32 +42,36 @@ public class Cricket_Driver {
                     player.getFourCount() +"\t\t"+player.getSixCount());
         }
         System.out.println("Total: "+teamScoreCard.getTotalRuns()+"/"+teamScoreCard.getTotalWickets());
-        System.out.println("Overs: "+overNumber);
+        if(lastBallPlayed%6==0)
+            System.out.println("Overs: "+overNumber);
+        else
+            System.out.println("Overs: "+(overNumber-1)+"."+lastBallPlayed);
     }
 
     public static void playInnings(TeamScoreCard battingTeam, int overCount, int playerCount){
         Scanner sc = new Scanner(System.in);
-        for(int i=0;i<overCount;i++){
-            for(int j=0;j<6;){
-                System.out.println("Enter Ball Status for Ball No:"+(j+1)+" for over: "+(i+1));
+        int currentOver=1;
+        for(;currentOver<=overCount;currentOver++){
+            int currentBall=1;
+            while (currentBall<=6) {
+                System.out.println("Enter Ball Status for Ball No:"+currentOver+" for over: "+currentBall);
                 String ballStatus = sc.nextLine();
                 battingTeam.ballExecute(ballStatus);
-                if(j==5){
+                if(currentBall==6){
                     battingTeam.lastBall();
                 }
                 if(!ballStatus.equals("Wd"))
-                    ++j;
-                if(battingTeam.getTotalWickets()==playerCount)
+                    ++currentBall;
+                if(battingTeam.getTotalWickets()==(playerCount-1))
                     break;
                 if(battingTeam.getTeamNumber()==2 && battingTeam.getTotalRuns()>battingTeam.getTarget())
                     break;
             }
-            displayScore(battingTeam,i+1,1);
+            displayScore(battingTeam,currentOver,currentBall-1);
         }
     }
 
-    public static List<Player> teamDetails(int playerCount,int teamNumber){
-        System.out.println("Please enter the batting order of Team "+teamNumber);
+    public static List<Player> inputTeamDetails(){
         Scanner sc = new Scanner(System.in);
         List<Player> teamPlayers = new ArrayList<>();
         for(int i=0;i<playerCount;i++){
